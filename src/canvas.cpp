@@ -1,0 +1,59 @@
+
+#include "Canvas.h"
+#include <stdexcept>
+#include "pngwriter.h"
+
+
+bool RgbColor::operator==(const RgbColor& other) const {
+    return (red == other.red && green == other.green && blue == other.blue);
+}
+
+Canvas::Canvas(int w, int h) : width(w), height(h) {
+    blueAspect.resize(w * h, 0);
+    greenAspect.resize(w * h, 0);
+    redAspect.resize(w * h, 0);
+}
+
+Canvas::Canvas(int w, int h, const RgbColor& backgroundColor) : width(w), height(h) {
+    blueAspect.resize(w * h, backgroundColor.blue);
+    greenAspect.resize(w * h, backgroundColor.green);
+    redAspect.resize(w * h, backgroundColor.red);
+}
+
+int Canvas::getWidth() const {
+    return width;
+}
+
+int Canvas::getHeight() const {
+    return height;
+}
+
+void Canvas::resize(int newWidth, int newHeight) {
+    width = newWidth;
+    height = newHeight;
+    blueAspect.resize(newWidth * newHeight, 0);
+    greenAspect.resize(newWidth * newHeight, 0);
+    redAspect.resize(newWidth * newHeight, 0);
+}
+
+void Canvas::setPixel(int x, int y, const RgbColor& color) {
+    if (x < 0 || x >= width || y < 0 || y >= height) {
+        throw std::out_of_range("Pixel coordinates out of bounds");
+    }
+    int index = y * width + x;
+    blueAspect[index] = color.blue;
+    greenAspect[index] = color.green;
+    redAspect[index] = color.red;
+}
+
+RgbColor Canvas::getPixel(int x, int y) const {
+    if (x < 0 || x >= width || y < 0 || y >= height) {
+        throw std::out_of_range("Pixel coordinates out of bounds");
+    }
+    int index = y * width + x;
+    return RgbColor(redAspect[index], greenAspect[index], blueAspect[index]);
+}
+
+void Canvas::toPNG(const char* filename) const {
+    writePNG(filename, *this);
+}

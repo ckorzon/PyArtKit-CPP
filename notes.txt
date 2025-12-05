@@ -1,0 +1,23 @@
+
+* Personal project notes for my own understanding & memory
+
+## TOOLING ##
+- vcpkg is used to install dependencies
+- cmake is used to compile the code
+- catch2 is used for unit testing
+
+
+## DEPENDENCIES ##
+- Dependencies are declared in vcpkg.json
+- Dependency installation is performed via:
+vcpkg install
+
+
+## COMPILATION ##
+cmake -B build -S . --preset=mingw-debug
+cmake --build build
+
+
+## TESTING ##
+- Unit tests written in 'test_<module>.cpp' files under tests directory
+- Execute unit tests by _____

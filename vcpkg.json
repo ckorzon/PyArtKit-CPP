@@ -1,0 +1,9 @@
+{
+  "name": "py-art-kit-cpp",
+  "version": "0.0.1",
+  "dependencies": [
+    "catch2",
+    "zlib",
+    "libpng"
+  ]
+}
