@@ -2,7 +2,7 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch_test_macros.hpp>
 
-#include "../src/canvas.h"
+#include "canvas.h"
 
 TEST_CASE("Canvas Initialization and Pixel Manipulation") {
     Canvas canvas(5, 5, RgbColor(255, 0, 0));

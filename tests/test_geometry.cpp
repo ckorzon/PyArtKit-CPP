@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch_test_macros.hpp>
 
-#include "../src/geometry.h"
+#include "geometry.h"
 
 TEST_CASE("Vertex Creation and Manipulation") {
     Vertex v(10, 20);
