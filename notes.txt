@@ -14,8 +14,8 @@ vcpkg install
 
 
 ## COMPILATION ##
-cmake -B build -S . --preset=mingw-debug
-cmake --build build
+cmake -B build -S . --preset=msvc-release
+cmake --build build --config Release
 
 
 ## TESTING ##

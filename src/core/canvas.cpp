@@ -46,6 +46,30 @@ void Canvas::setPixel(int x, int y, const RgbColor& color) {
     redAspect[index] = color.red;
 }
 
+uint8_t Canvas::getPixelRed(int x, int y) const {
+    if (x < 0 || x >= width || y < 0 || y >= height) {
+        throw std::out_of_range("Pixel coordinates out of bounds");
+    }
+    int index = y * width + x;
+    return redAspect[index];
+}
+
+uint8_t Canvas::getPixelGreen(int x, int y) const {
+    if (x < 0 || x >= width || y < 0 || y >= height) {
+        throw std::out_of_range("Pixel coordinates out of bounds");
+    }
+    int index = y * width + x;
+    return greenAspect[index];
+}
+
+uint8_t Canvas::getPixelBlue(int x, int y) const {
+    if (x < 0 || x >= width || y < 0 || y >= height) {
+        throw std::out_of_range("Pixel coordinates out of bounds");
+    }
+    int index = y * width + x;
+    return blueAspect[index];
+}
+
 RgbColor Canvas::getPixel(int x, int y) const {
     if (x < 0 || x >= width || y < 0 || y >= height) {
         throw std::out_of_range("Pixel coordinates out of bounds");

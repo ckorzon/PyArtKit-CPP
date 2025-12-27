@@ -48,15 +48,14 @@ void writePNG(const char* filename, const Canvas& canvas) {
     for (int y = 0; y < height; ++y) {
         std::vector<png_byte> row(width * 3);
         for (int x = 0; x < width; ++x) {
-            RgbColor color = canvas.getPixel(x, y);
-            row[x * 3 + 0] = color.red;
-            row[x * 3 + 1] = color.green;
-            row[x * 3 + 2] = color.blue;
+            row[x * 3] = canvas.getPixelRed(x, y);
+            row[x * 3 + 1] = canvas.getPixelGreen(x, y);
+            row[x * 3 + 2] = canvas.getPixelBlue(x, y);
         }
         png_write_row(png, row.data());
     }
 
-    png_write_end(png, nullptr);
+    png_write_end(png, info);
 
     png_destroy_write_struct(&png, &info);
     fclose(fp);

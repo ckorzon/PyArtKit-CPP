@@ -20,5 +20,20 @@ int main() {
     }
     canvas.toPNG("test_output.png");
     cout << "PNG image 'test_output.png' created." << endl;
+    for (int y = 0; y < canvas.getHeight(); ++y) {
+        for (int x = 0; x < canvas.getWidth(); ++x) {
+            if (x < canvas.getWidth() / 3) {
+                canvas.setPixel(x, y, RgbColor(255, 0, 0));
+            }
+            else if (x < 2 * (canvas.getWidth() / 3)) {
+                canvas.setPixel(x, y, RgbColor(0, 255, 0));
+            }
+            else {
+                canvas.setPixel(x, y, RgbColor(0, 0, 255));
+            }
+        }
+    }
+    canvas.toPNG("test_output_stripes.png");
+    cout << "PNG image 'test_output_stripes.png' created." << endl;
     return 0;
 };

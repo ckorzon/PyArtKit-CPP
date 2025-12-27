@@ -32,6 +32,9 @@ public:
     void resize(int newWidth, int newHeight);
     void setPixel(int x, int y, const RgbColor& color);
     RgbColor getPixel(int x, int y) const;
+    uint8_t getPixelRed(int x, int y) const;
+    uint8_t getPixelGreen(int x, int y) const;
+    uint8_t getPixelBlue(int x, int y) const;
     void toPNG(const char* filename) const;
 };
 
