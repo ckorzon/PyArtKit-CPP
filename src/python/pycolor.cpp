@@ -1,13 +1,30 @@
 #include "pycolor.h"
 
+static uint8_t getColorAspectFromLong(unsigned long valueLong) {
+    if (valueLong < 0 || valueLong > 255) {
+        PyErr_SetString(PyExc_ValueError, "rgb value must be in range [0, 255]");
+        throw -1;
+    }
+
+    return static_cast<uint8_t>(valueLong);
+}
+
 static int PyColor_init(PyColorObject *self, PyObject *args, PyObject *kwargs) {
     static const char *kwlist[] = {"red", "green", "blue", NULL};
-    uint8_t red, green, blue;
+    unsigned long red, green, blue;
     if (!PyArg_ParseTupleAndKeywords(args, kwargs, "iii", const_cast<char **>(kwlist), &red, &green, &blue)) {
         return -1;
     }
 
-    self->color = std::make_unique<RgbColor>(red, green, blue);
+    try {
+        uint8_t colorRed = getColorAspectFromLong(red);
+        uint8_t colorGreen = getColorAspectFromLong(green);
+        uint8_t colorBlue = getColorAspectFromLong(blue);
+        self->color = std::make_unique<RgbColor>(colorRed, colorGreen, colorBlue);
+    } catch (int e) {
+        return -1;
+    }
+
     return 0;
 }
 
@@ -48,17 +65,12 @@ static uint8_t getColorAspectFromPyObject(PyObject *value) {
         throw -1;
     }
 
-    long valueLong = PyLong_AsUnsignedLong(value);
+    unsigned long valueLong = PyLong_AsUnsignedLong(value);
     if (valueLong == (uint8_t)-1 && PyErr_Occurred()) {
         throw -1;
     }
 
-    if (valueLong < 0 || valueLong > 255) {
-        PyErr_SetString(PyExc_ValueError, "rgb value must be in range [0, 255]");
-        throw -1;
-    }
-
-    return static_cast<uint8_t>(valueLong);
+    return getColorAspectFromLong(valueLong);
 }
 
 static int PyColor_setRed(PyColorObject *self, PyObject *value, void *closure) {

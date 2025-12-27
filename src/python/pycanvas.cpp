@@ -4,13 +4,28 @@
 
 static int PyCanvas_init(PyCanvasObject *self, PyObject *args, PyObject *kwargs) {
 
-    static const char *kwlist[] = {"width", "height", NULL};
+    static const char *kwlist[] = {"width", "height", "background_color", NULL};
+
     int width, height;
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "ii", const_cast<char **>(kwlist), &width, &height)) {
+    PyObject* color_arg = nullptr;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "ii|O", const_cast<char **>(kwlist), &width, &height, &color_arg)) {
         return -1;
     }
 
-    self->canvas = std::make_unique<Canvas>(width, height);
+    if (color_arg == nullptr) {
+        self->canvas = std::make_unique<Canvas>(width, height);
+        return 0;
+    }
+
+    if (!PyColor_Check(color_arg)) {
+        PyErr_SetString(PyExc_TypeError, "background_color must be a Color object");
+        return -1;
+    }
+
+    PyColorObject* color = reinterpret_cast<PyColorObject*>(color_arg);
+
+    self->canvas = std::make_unique<Canvas>(width, height, *color->color);
     return 0;
 }
 
