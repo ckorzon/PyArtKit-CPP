@@ -66,7 +66,38 @@ static PyObject* PyCanvas_setPixel(PyCanvasObject *self, PyObject *args, PyObjec
 
     PyColorObject* color = reinterpret_cast<PyColorObject*>(color_arg);
 
-    self->canvas->setPixel(x, y, *color->color);
+    self->canvas->setPixel(x, y, color->color.get());
+    Py_RETURN_NONE;
+}
+
+static PyObject* PyCanvas_addShape(PyCanvasObject* self, PyObject* args, PyObject *kwargs) {
+
+    static const char *kwlist[] = {"shape", "fill_color", "border_color", NULL};
+
+    PyObject* shape_obj;
+    PyObject* border_obj;
+    PyObject* fill_obj;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "OOO", const_cast<char **>(kwlist), &shape_obj, &fill_obj, &border_obj)) {
+        return nullptr;
+    }
+
+    if (!PyShape_Check(shape_obj)) {
+        PyErr_SetString(PyExc_TypeError, "shape must be a Shape");
+        return nullptr;
+    }
+
+    if (!PyColor_Check(border_obj) || !PyColor_Check(fill_obj)) {
+        PyErr_SetString(PyExc_TypeError, "border and fill must be Color objects");
+        return nullptr;
+    }
+
+    PyShapeObject* pyShape = reinterpret_cast<PyShapeObject*>(shape_obj);
+    PyColorObject* border = reinterpret_cast<PyColorObject*>(border_obj);
+    PyColorObject* fill   = reinterpret_cast<PyColorObject*>(fill_obj);
+
+    self->canvas->addShape(*pyShape->shape, fill->color.get(), border->color.get());
+
     Py_RETURN_NONE;
 }
 
@@ -94,6 +125,7 @@ static PyMethodDef PyCanvas_methods[] = {
     {"resize", (PyCFunction)PyCanvas_resize, METH_VARARGS | METH_KEYWORDS, "Resize the canvas"},
     {"setPixel", (PyCFunction)PyCanvas_setPixel, METH_VARARGS | METH_KEYWORDS, "Set a pixel on the canvas"},
     {"toPng", (PyCFunction)PyCanvas_toPng, METH_VARARGS | METH_KEYWORDS, "Save the canvas as a PNG file"},
+    {"addShape", (PyCFunction)PyCanvas_addShape, METH_VARARGS | METH_KEYWORDS, "Draw a Shape on the canvas"},
     {NULL}
 };
 

@@ -36,14 +36,27 @@ void Canvas::resize(int newWidth, int newHeight) {
     redAspect.resize(newWidth * newHeight, 0);
 }
 
-void Canvas::setPixel(int x, int y, const RgbColor& color) {
+void Canvas::setPixel(int x, int y, const RgbColor* color) {
     if (x < 0 || x >= width || y < 0 || y >= height) {
         throw std::out_of_range("Pixel coordinates out of bounds");
     }
     int index = y * width + x;
-    blueAspect[index] = color.blue;
-    greenAspect[index] = color.green;
-    redAspect[index] = color.red;
+    blueAspect[index] = color->blue;
+    greenAspect[index] = color->green;
+    redAspect[index] = color->red;
+}
+
+void Canvas::addShape(const Shape& shape, const RgbColor* fillColor, const RgbColor* borderColor) {
+    const set<pair<long, long>> pixels = shape.getContainedPixels();
+    for (const auto& pixel : pixels) {
+        setPixel(pixel.first, pixel.second, fillColor);
+    }
+    if (borderColor != nullptr) {
+        const set<pair<long, long>> borderPixels = shape.getBorderPixels();
+        for (const auto& pixel : borderPixels) {
+            setPixel(pixel.first, pixel.second, borderColor);
+        }
+    }
 }
 
 uint8_t Canvas::getPixelRed(int x, int y) const {

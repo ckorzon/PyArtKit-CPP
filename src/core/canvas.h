@@ -3,6 +3,9 @@
 
 #include <cstdint>
 #include <vector>
+#include <memory>
+#include "shapes.h"
+
 
 class RgbColor {
 public:
@@ -13,7 +16,6 @@ public:
     uint8_t blue; // Blue component
     bool operator==(const RgbColor& other) const;
 };
-
 
 class Canvas {
 private:
@@ -30,14 +32,14 @@ public:
     int getWidth() const;
     int getHeight() const;
     void resize(int newWidth, int newHeight);
-    void setPixel(int x, int y, const RgbColor& color);
+    void setPixel(int x, int y, const RgbColor* color);
+    void addShape(const Shape& shape, const RgbColor* fillColor, const RgbColor* borderColor = nullptr);
     RgbColor getPixel(int x, int y) const;
     uint8_t getPixelRed(int x, int y) const;
     uint8_t getPixelGreen(int x, int y) const;
     uint8_t getPixelBlue(int x, int y) const;
     void toPNG(const char* filename) const;
 };
-
 
 
 #endif // CANVAS_H

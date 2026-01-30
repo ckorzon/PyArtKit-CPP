@@ -131,7 +131,6 @@ PyTypeObject PyColorType = {
     PyVarObject_HEAD_INIT(nullptr, 0)
 };
 
-// Todo: Call this function during module initialization
 void init_PyColorType() {
     PyColorType.tp_name = "pyartkitcpp.Color";
     PyColorType.tp_basicsize = sizeof(PyColorObject);
@@ -143,4 +142,3 @@ void init_PyColorType() {
     PyColorType.tp_new = PyType_GenericNew;
     PyColorType.tp_getset = PyColor_getset;
 }
-

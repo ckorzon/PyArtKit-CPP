@@ -2,7 +2,7 @@
 #ifndef PYCANVAS_H
 #define PYCANVAS_H
 
-#include "pycolor.h"
+#include "pyshapes.h"
 
 #ifdef __cplusplus
 extern "C" {

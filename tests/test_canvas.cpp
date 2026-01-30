@@ -9,7 +9,8 @@ TEST_CASE("Canvas Initialization and Pixel Manipulation") {
     REQUIRE(canvas.getWidth() == 5);
     REQUIRE(canvas.getHeight() == 5);
 
-    canvas.setPixel(2, 3, RgbColor(0, 255, 0));
+    RgbColor green = RgbColor(0, 255, 0);
+    canvas.setPixel(2, 3, &green);
     RgbColor pixelColorA = canvas.getPixel(2, 3);
     RgbColor pixelColorB = canvas.getPixel(1, 3);
 
