@@ -39,6 +39,7 @@ public:
     uint8_t getPixelGreen(int x, int y) const;
     uint8_t getPixelBlue(int x, int y) const;
     void toPNG(const char* filename) const;
+    bool contains(int x, int y) const;
 };
 
 

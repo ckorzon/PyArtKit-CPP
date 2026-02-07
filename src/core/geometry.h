@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <initializer_list>
+#include "shapes.h"
 
 class Vertex {
     private:
@@ -21,7 +22,7 @@ class Vertex {
 };
 
 
-class Polygon {
+class Polygon : public Shape {
     private:
         std::vector<Vertex> vertices;
 
@@ -39,7 +40,9 @@ class Polygon {
         long getMaxY() const;
         long getMinY() const;
         bool operator==(const Polygon& other) const;
-        bool contains(const Vertex& point) const;
+        set<pair<long, long>> getContainedPixels() const override;
+        set<pair<long, long>> getBorderPixels() const override;
+        bool containsPoint(long x, long y) const override;
 };
 
 #endif // GEOMETRY_H

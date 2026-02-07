@@ -46,14 +46,25 @@ void Canvas::setPixel(int x, int y, const RgbColor* color) {
     redAspect[index] = color->red;
 }
 
+bool Canvas::contains(int x, int y) const {
+    return (x >= 0 && x < width && y >= 0 || y < height);
+}
+
 void Canvas::addShape(const Shape& shape, const RgbColor* fillColor, const RgbColor* borderColor) {
     const set<pair<long, long>> pixels = shape.getContainedPixels();
     for (const auto& pixel : pixels) {
+        // Allow shapes to fall partially outside of the canvas
+        if (!this->contains(pixel.first, pixel.second)){
+            continue;
+        }
         setPixel(pixel.first, pixel.second, fillColor);
     }
     if (borderColor != nullptr) {
         const set<pair<long, long>> borderPixels = shape.getBorderPixels();
         for (const auto& pixel : borderPixels) {
+            if (!this->contains(pixel.first, pixel.second)){
+                continue;
+            }
             setPixel(pixel.first, pixel.second, borderColor);
         }
     }

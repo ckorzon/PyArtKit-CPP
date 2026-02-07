@@ -133,7 +133,7 @@ bool Polygon::operator==(const Polygon& other) const {
     return true;
 }
 
-bool Polygon::contains(const Vertex& point) const {
+bool Polygon::containsPoint(long x, long y) const {
     int n = vertices.size();
     if (n < 3) {
         return false; // A polygon must have at least 3 vertices
@@ -144,10 +144,65 @@ bool Polygon::contains(const Vertex& point) const {
         const Vertex& vi = vertices[i];
         const Vertex& vj = vertices[j];
 
-        if (((vi.getY() > point.getY()) != (vj.getY() > point.getY())) &&
-            (point.getX() < (vj.getX() - vi.getX()) * (point.getY() - vi.getY()) / (vj.getY() - vi.getY()) + vi.getX())) {
+        if (((vi.getY() > y) != (vj.getY() > y)) &&
+            (x < (vj.getX() - vi.getX()) * (y - vi.getY()) / (vj.getY() - vi.getY()) + vi.getX())) {
             inside = !inside;
         }
     }
     return inside;
+}
+
+set<pair<long, long>> Polygon::getContainedPixels() const {
+    long minX = getMinX();
+    long maxX = getMaxX();
+    long minY = getMinY();
+    long maxY = getMaxY();
+    set<pair<long, long>> pixels;
+    for (long x = minX; x <= maxX; ++x) {
+        for (long y = minY; y <= maxY; ++y) {
+            if (containsPoint(x, y)) {
+                pixels.insert({x, y});
+            }
+        }
+    }
+    return pixels;
+}
+
+set<pair<long, long>> Polygon::getBorderPixels() const {
+    set<pair<long, long>> borderPixels;
+
+    int n = vertices.size();
+
+    for (int i = 0, j = n - 1; i < n; j = i++) {
+        const Vertex& vi = vertices[i];
+        const Vertex& vj = vertices[j];
+
+        // Simple line drawing algorithm (Bresenham's line algorithm)
+        long x0 = vi.getX();
+        long y0 = vi.getY();
+        long x1 = vj.getX();
+        long y1 = vj.getY();
+
+        long dx = abs(x1 - x0);
+        long dy = abs(y1 - y0);
+        long step_x = (x0 < x1) ? 1 : -1;
+        long step_y = (y0 < y1) ? 1 : -1;
+        long err = dx - dy;
+
+        while (true) {
+            borderPixels.insert({x0, y0});
+            if (x0 == x1 && y0 == y1) break;
+            long e2 = 2 * err;
+            if (e2 > -dy) {
+                err -= dy;
+                x0 += step_x;
+            }
+            if (e2 < dx) {
+                err += dx;
+                y0 += step_y;
+            }
+        }
+    }
+
+    return borderPixels;
 }

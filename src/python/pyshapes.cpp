@@ -60,7 +60,8 @@ void init_PyCircleType() {
     PyCircleType.tp_flags = Py_TPFLAGS_DEFAULT;
     PyCircleType.tp_init = (initproc)PyCircle_init;
     PyCircleType.tp_new = PyType_GenericNew;
-    // ToDo: Do we need a dealloc function?
-    // PyCircleType.tp_dealloc = (destructor)PyCircle_dealloc;
-
 }
+
+// Polygon
+
+
