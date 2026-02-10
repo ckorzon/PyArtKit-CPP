@@ -27,17 +27,22 @@ PyMODINIT_FUNC PyInit_pyartkitcpp(void) {
 
     init_PyShapeType();
     init_PyCircleType();
+    init_PyPolygonType();
 
     PyCircleType.tp_base = &PyShapeType;
+    PyPolygonType.tp_base = &PyShapeType;
 
     if (PyType_Ready(&PyShapeType) < 0) return nullptr;
     if (PyType_Ready(&PyCircleType) < 0) return nullptr;
+    if (PyType_Ready(&PyPolygonType) < 0) return nullptr;
 
     Py_INCREF(&PyShapeType);
     Py_INCREF(&PyCircleType);
+    Py_INCREF(&PyPolygonType);
 
     PyModule_AddObject(m, "Shape", (PyObject*)&PyShapeType);
     PyModule_AddObject(m, "Circle", (PyObject*)&PyCircleType);
+    PyModule_AddObject(m, "Polygon", (PyObject*)&PyPolygonType);
 
     // Initialize Canvas
     init_PyCanvasType();

@@ -34,7 +34,7 @@ class Polygon : public Shape {
         void addVertex(const Vertex& vertex);
         int getVertexCount() const;
         Vertex getVertex(int index) const;
-        void translate(long dx, long dy);
+        void translate(long dx, long dy) override;
         long getMaxX() const;
         long getMinX() const;
         long getMaxY() const;

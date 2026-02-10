@@ -39,3 +39,8 @@ bool Circle::containsPoint(long x, long y) const {
     long dy = y - centerY;
     return dx * dx + dy * dy <= radius * radius;
 }
+
+void Circle::translate(long dx, long dy) {
+    centerX += dx;
+    centerY += dy;
+}

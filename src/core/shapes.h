@@ -10,6 +10,7 @@ class Shape {
         virtual set<pair<long, long>> getContainedPixels() const = 0;
         virtual set<pair<long, long>> getBorderPixels() const = 0;
         virtual bool containsPoint(long x, long y) const = 0;
+        virtual void translate(long dx, long dy) = 0;
         virtual ~Shape() = default;
 };
 
@@ -25,6 +26,7 @@ class Circle : public Shape {
         set<pair<long, long>> getContainedPixels() const override;
         set<pair<long, long>> getBorderPixels() const override;
         bool containsPoint(long x, long y) const override;
+        void translate(long dx, long dy) override;
 };
 
 #endif
