@@ -47,7 +47,7 @@ void Canvas::setPixel(int x, int y, const RgbColor* color) {
 }
 
 bool Canvas::contains(int x, int y) const {
-    return (x >= 0 && x < width && y >= 0 || y < height);
+    return (x >= 0 && x < width && y >= 0 && y < height);
 }
 
 void Canvas::addShape(const Shape& shape, const RgbColor* fillColor, const RgbColor* borderColor) {
