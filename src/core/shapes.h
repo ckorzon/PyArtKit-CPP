@@ -7,26 +7,26 @@ using namespace std;
 
 class Shape {
     public:
-        virtual set<pair<long, long>> getContainedPixels() const = 0;
-        virtual set<pair<long, long>> getBorderPixels() const = 0;
-        virtual bool containsPoint(long x, long y) const = 0;
-        virtual void translate(long dx, long dy) = 0;
+        virtual set<pair<int, int>> getContainedPixels() const = 0;
+        virtual set<pair<int, int>> getBorderPixels() const = 0;
+        virtual bool containsPoint(int x, int y) const = 0;
+        virtual void translate(int dx, int dy) = 0;
         virtual ~Shape() = default;
 };
 
 
 class Circle : public Shape {
     private:
-        long centerX;
-        long centerY;
-        long radius;
+        int centerX;
+        int centerY;
+        int radius;
 
     public:
-        Circle(long centerX, long centerY, long radius);
-        set<pair<long, long>> getContainedPixels() const override;
-        set<pair<long, long>> getBorderPixels() const override;
-        bool containsPoint(long x, long y) const override;
-        void translate(long dx, long dy) override;
+        Circle(int centerX, int centerY, int radius);
+        set<pair<int, int>> getContainedPixels() const override;
+        set<pair<int, int>> getBorderPixels() const override;
+        bool containsPoint(int x, int y) const override;
+        void translate(int dx, int dy) override;
 };
 
 #endif

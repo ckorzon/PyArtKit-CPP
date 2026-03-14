@@ -1,16 +1,16 @@
 
 #include "shapes.h"
 
-Circle::Circle(long centerX, long centerY, long radius)
+Circle::Circle(int centerX, int centerY, int radius)
     : centerX(centerX), centerY(centerY), radius(radius) {}
 
-set<pair<long, long>> Circle::getContainedPixels() const {
-    set<pair<long, long>> pixels;
-    long rSquared = radius * radius;
-    for (long x = centerX - radius; x <= centerX + radius; ++x) {
-        for (long y = centerY - radius; y <= centerY + radius; ++y) {
-            long dx = x - centerX;
-            long dy = y - centerY;
+set<pair<int, int>> Circle::getContainedPixels() const {
+    set<pair<int, int>> pixels;
+    int rSquared = radius * radius;
+    for (int x = centerX - radius; x <= centerX + radius; ++x) {
+        for (int y = centerY - radius; y <= centerY + radius; ++y) {
+            int dx = x - centerX;
+            int dy = y - centerY;
             if (dx * dx + dy * dy <= rSquared) {
                 pixels.insert({x, y});
             }
@@ -19,13 +19,13 @@ set<pair<long, long>> Circle::getContainedPixels() const {
     return pixels;
 }
 
-set<pair<long, long>> Circle::getBorderPixels() const {
-    set<pair<long, long>> pixels;
-    long rSquared = radius * radius;
-    for (long x = centerX - radius; x <= centerX + radius; ++x) {
-        for (long y = centerY - radius; y <= centerY + radius; ++y) {
-            long dx = x - centerX;
-            long dy = y - centerY;
+set<pair<int, int>> Circle::getBorderPixels() const {
+    set<pair<int, int>> pixels;
+    int rSquared = radius * radius;
+    for (int x = centerX - radius; x <= centerX + radius; ++x) {
+        for (int y = centerY - radius; y <= centerY + radius; ++y) {
+            int dx = x - centerX;
+            int dy = y - centerY;
             if (dx * dx + dy * dy == rSquared) {
                 pixels.insert({x, y});
             }
@@ -34,13 +34,13 @@ set<pair<long, long>> Circle::getBorderPixels() const {
     return pixels;
 }
 
-bool Circle::containsPoint(long x, long y) const {
-    long dx = x - centerX;
-    long dy = y - centerY;
+bool Circle::containsPoint(int x, int y) const {
+    int dx = x - centerX;
+    int dy = y - centerY;
     return dx * dx + dy * dy <= radius * radius;
 }
 
-void Circle::translate(long dx, long dy) {
+void Circle::translate(int dx, int dy) {
     centerX += dx;
     centerY += dy;
 }

@@ -8,16 +8,16 @@
 
 class Vertex {
     private:
-        long x;
-        long y;
+        int x;
+        int y;
 
     public:
-        Vertex(long x, long y);
-        long getX() const;
-        long getY() const;
-        void setX(long x);
-        void setY(long y);
-        void translate(long dx, long dy);
+        Vertex(int x, int y);
+        int getX() const;
+        int getY() const;
+        void setX(int x);
+        void setY(int y);
+        void translate(int dx, int dy);
         bool operator==(const Vertex& other) const;
 };
 
@@ -34,15 +34,15 @@ class Polygon : public Shape {
         void addVertex(const Vertex& vertex);
         int getVertexCount() const;
         Vertex getVertex(int index) const;
-        void translate(long dx, long dy) override;
-        long getMaxX() const;
-        long getMinX() const;
-        long getMaxY() const;
-        long getMinY() const;
+        void translate(int dx, int dy) override;
+        int getMaxX() const;
+        int getMinX() const;
+        int getMaxY() const;
+        int getMinY() const;
         bool operator==(const Polygon& other) const;
-        set<pair<long, long>> getContainedPixels() const override;
-        set<pair<long, long>> getBorderPixels() const override;
-        bool containsPoint(long x, long y) const override;
+        set<pair<int, int>> getContainedPixels() const override;
+        set<pair<int, int>> getBorderPixels() const override;
+        bool containsPoint(int x, int y) const override;
 };
 
 #endif // GEOMETRY_H

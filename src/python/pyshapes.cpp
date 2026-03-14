@@ -26,7 +26,7 @@ void init_PyShapeType() {
 
 static int PyCircle_init(PyCircleObject *self, PyObject *args, PyObject *kwargs) {
     static const char *kwlist[] = {"x", "y", "radius", NULL};
-    long centerX, centerY, radius;
+    int centerX, centerY, radius;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs, "iii", const_cast<char **>(kwlist),
                                      &centerX, &centerY, &radius)) {
@@ -52,12 +52,12 @@ static PyGetSetDef PyCircle_getset[] = {
 static PyObject* PyCircle_translate(PyCircleObject* self, PyObject* args, PyObject* kwargs) {
     static const char* kwlist[] = {"dx", "dy", nullptr};
 
-    long dx, dy;
+    int dx, dy;
 
     if (!PyArg_ParseTupleAndKeywords(
             args,
             kwargs,
-            "ll",
+            "ii",
             const_cast<char**>(kwlist),
             &dx, &dy))
     {
@@ -137,8 +137,8 @@ static int PyPolygon_init(PyPolygonObject* self, PyObject* args, PyObject* kwarg
         PyObject* xObj = PyTuple_GetItem(item, 0);
         PyObject* yObj = PyTuple_GetItem(item, 1);
 
-        long x = PyLong_AsLong(xObj);
-        long y = PyLong_AsLong(yObj);
+        int x = (int) PyLong_AsLong(xObj);
+        int y = (int) PyLong_AsLong(yObj);
 
         if (PyErr_Occurred()) {
             PyErr_Format(
@@ -166,12 +166,12 @@ static PyGetSetDef PyPolygon_getset[] = {
 static PyObject* PyPolygon_translate(PyPolygonObject* self, PyObject* args, PyObject* kwargs) {
     static const char* kwlist[] = {"dx", "dy", nullptr};
 
-    long dx, dy;
+    int dx, dy;
 
     if (!PyArg_ParseTupleAndKeywords(
             args,
             kwargs,
-            "ll",
+            "ii",
             const_cast<char**>(kwlist),
             &dx, &dy))
     {
