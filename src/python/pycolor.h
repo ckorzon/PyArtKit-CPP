@@ -1,10 +1,10 @@
-#ifndef COLOR_H
-#define COLOR_H
+#ifndef PYCOLOR_H
+#define PYCOLOR_H
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include <memory>
-#include "canvas.h"
+#include "color.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,4 +25,4 @@ extern void init_PyColorType();
 }
 #endif
 
-#endif
+#endif // PYCOLOR_H

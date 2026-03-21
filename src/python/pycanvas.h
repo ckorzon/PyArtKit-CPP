@@ -3,6 +3,7 @@
 #define PYCANVAS_H
 
 #include "pyshapes.h"
+#include "canvas.h"
 
 #ifdef __cplusplus
 extern "C" {

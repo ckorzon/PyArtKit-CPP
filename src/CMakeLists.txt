@@ -1,5 +1,5 @@
 
-add_library(artkit_core STATIC core/canvas.cpp core/geometry.cpp core/pngwriter.cpp core/shapes.cpp)
+add_library(artkit_core STATIC core/color.cpp core/colorscheme.cpp core/canvas.cpp core/geometry.cpp core/pngwriter.cpp core/shapes.cpp)
 
 find_package(PNG REQUIRED)
 

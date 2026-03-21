@@ -3,11 +3,6 @@
 #include <stdexcept>
 #include "pngwriter.h"
 
-
-bool RgbColor::operator==(const RgbColor& other) const {
-    return (red == other.red && green == other.green && blue == other.blue);
-}
-
 Canvas::Canvas(int w, int h) : width(w), height(h) {
     blueAspect.resize(w * h, 0);
     greenAspect.resize(w * h, 0);
