@@ -42,6 +42,17 @@ extern void init_PyPolygonType();
 #define PyPolygon_Check(op) PyObject_TypeCheck(op, &PyPolygonType)
 
 
+// ELLIPSE
+
+typedef struct {
+    PyShapeObject base;
+} PyEllipseObject;
+
+extern PyTypeObject PyEllipseType;
+extern void init_PyEllipseType();
+#define PyEllipse_Check(op) PyObject_TypeCheck(op, &PyEllipseType)
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -1,7 +1,7 @@
 
 #include "pyshapes.h"
 
-// Shape
+// * ---------- SHAPE ---------- * //
 
 static int PyShape_init(PyShapeObject *self, PyObject *args, PyObject *kwargs) {
     PyErr_SetString(PyExc_RuntimeError, "Cannot instantiate abstract Shape class");
@@ -22,7 +22,7 @@ void init_PyShapeType() {
     PyShapeType.tp_new = PyType_GenericNew;
 }
 
-// Circle
+// * ---------- CIRCLE ---------- * //
 
 static int PyCircle_init(PyCircleObject *self, PyObject *args, PyObject *kwargs) {
     static const char *kwlist[] = {"x", "y", "radius", NULL};
@@ -43,7 +43,7 @@ static int PyCircle_init(PyCircleObject *self, PyObject *args, PyObject *kwargs)
     return 0;
 }
 
-// ToDo: Add Polygon getters and setters
+// ToDo: Add Circle getters and setters
 
 static PyGetSetDef PyCircle_getset[] = {
     {nullptr}
@@ -87,7 +87,7 @@ void init_PyCircleType() {
     PyCircleType.tp_methods = PyCircle_methods;
 }
 
-// Polygon
+// * ---------- POLYGON ---------- * //
 
 static int PyPolygon_init(PyPolygonObject* self, PyObject* args, PyObject* kwargs) {
     static const char* kwlist[] = {"vertices", nullptr};
@@ -199,4 +199,70 @@ void init_PyPolygonType() {
     PyPolygonType.tp_new = PyType_GenericNew;
     PyPolygonType.tp_getset = PyPolygon_getset;
     PyPolygonType.tp_methods = PyPolygon_methods;
+}
+
+// * ---------- ELLIPSE ---------- * //
+
+
+static int PyEllipse_init(PyEllipseObject *self, PyObject *args, PyObject *kwargs) {
+    static const char *kwlist[] = {"x", "y", "x_radius", "y_radius", NULL};
+    int centerX, centerY, xRadius, yRadius;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "iiii", const_cast<char **>(kwlist),
+                                     &centerX, &centerY, &xRadius, &yRadius)) {
+        return -1;
+    }
+
+    try {
+        self->base.shape = std::make_shared<Ellipse>(centerX, centerY, xRadius, yRadius);
+    } catch (...) {
+        PyErr_SetString(PyExc_RuntimeError, "Failed to create Ellipse object");
+        return -1;
+    }
+
+    return 0;
+}
+
+// ToDo: Add Ellipse getters and setters
+
+static PyGetSetDef PyEllipse_getset[] = {
+    {nullptr}
+};
+
+static PyObject* PyEllipse_translate(PyEllipseObject* self, PyObject* args, PyObject* kwargs) {
+    static const char* kwlist[] = {"dx", "dy", nullptr};
+
+    int dx, dy;
+
+    if (!PyArg_ParseTupleAndKeywords(
+            args,
+            kwargs,
+            "ii",
+            const_cast<char**>(kwlist),
+            &dx, &dy))
+    {
+        return nullptr;
+    }
+
+    self->base.shape->translate(dx, dy);
+    Py_RETURN_NONE;
+};
+
+static PyMethodDef PyEllipse_methods[] = {
+    {"translate", (PyCFunction)PyEllipse_translate, METH_VARARGS | METH_KEYWORDS, "Translate the ellipse using dx and dy"},
+    {NULL}
+};
+
+PyTypeObject PyEllipseType = {
+    PyVarObject_HEAD_INIT(nullptr, 0)
+};
+
+void init_PyEllipseType() {
+    PyEllipseType.tp_name = "pyartkitcpp.Ellipse";
+    PyEllipseType.tp_basicsize = sizeof(PyEllipseObject);
+    PyEllipseType.tp_flags = Py_TPFLAGS_DEFAULT;
+    PyEllipseType.tp_init = (initproc)PyEllipse_init;
+    PyEllipseType.tp_new = PyType_GenericNew;
+    PyEllipseType.tp_getset = PyEllipse_getset;
+    PyEllipseType.tp_methods = PyEllipse_methods;
 }
