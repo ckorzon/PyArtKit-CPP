@@ -6,7 +6,7 @@
 
 TEST_CASE("Circle Creation and Containment") {
     Circle circle(0, 0, 5);
-    
+
     REQUIRE(circle.containsPoint(0, 0) == true);
     REQUIRE(circle.containsPoint(3, 4) == true); // 3-4-5 triangle
     REQUIRE(circle.containsPoint(5, 0) == true);
@@ -16,7 +16,7 @@ TEST_CASE("Circle Creation and Containment") {
 TEST_CASE("Circle Border Pixels") {
     Circle circle(1, 3, 5);
     auto borderPixels = circle.getBorderPixels();
-    
+
     REQUIRE(borderPixels.count({6, 3}) == 1);
     REQUIRE(borderPixels.count({4, 7}) == 1);
     REQUIRE(borderPixels.count({1, 8}) == 1);
@@ -27,7 +27,7 @@ TEST_CASE("Circle Border Pixels") {
 TEST_CASE("Circle Translation") {
     Circle circle(0, 0, 5);
     circle.translate(2, 3);
-    
+
     REQUIRE(circle.containsPoint(2, 3) == true);
     REQUIRE(circle.containsPoint(5, 7) == true); // 3-4-5 triangle
     REQUIRE(circle.containsPoint(7, 3) == true);
@@ -72,7 +72,7 @@ TEST_CASE("Ellipse Translation") {
 TEST_CASE("Ellipse Border Pixels") {
     Ellipse ellipse(1, 3, 5, 3);
     auto borderPixels = ellipse.getBorderPixels();
-    
+
     REQUIRE(borderPixels.count({6, 3}) == 1);
     REQUIRE(borderPixels.count({-4, 3}) == 1);
     REQUIRE(borderPixels.count({1, 0}) == 1);
