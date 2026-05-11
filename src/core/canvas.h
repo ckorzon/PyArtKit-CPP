@@ -23,7 +23,9 @@ public:
     int getHeight() const;
     void resize(int newWidth, int newHeight);
     void setPixel(int x, int y, const RgbColor* color);
+    void setPixel(int x, int y, const ColorScheme* color);
     void addShape(const Shape& shape, const RgbColor* fillColor, const RgbColor* borderColor = nullptr);
+    void addShape(const Shape& shape, const ColorScheme* fillColor, const ColorScheme* borderColor = nullptr);
     RgbColor getPixel(int x, int y) const;
     uint8_t getPixelRed(int x, int y) const;
     uint8_t getPixelGreen(int x, int y) const;

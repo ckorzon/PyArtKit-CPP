@@ -5,3 +5,5 @@ Testing
 vcpkg_installed
 CMakeCache.txt
 *.log
+.vs
+

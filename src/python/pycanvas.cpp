@@ -59,13 +59,18 @@ static PyObject* PyCanvas_setPixel(PyCanvasObject *self, PyObject *args, PyObjec
         return NULL;
     }
 
-    if (!PyColor_Check(color_arg)) {
-        PyErr_SetString(PyExc_TypeError, "color must be a Color object");
+    if (!PyColor_Check(color_arg) && !PyColorScheme_Check(color_arg)) {
+        PyErr_SetString(PyExc_TypeError, "color must be a Color or ColorScheme object");
         return NULL;
     }
 
-    PyColorObject* color = reinterpret_cast<PyColorObject*>(color_arg);
+    if (PyColorScheme_Check(color_arg)) {
+        PyColorSchemeObject* colorScheme = reinterpret_cast<PyColorSchemeObject*>(color_arg);
+        self->canvas->setPixel(x, y, colorScheme->scheme.get());
+        Py_RETURN_NONE;
+    }
 
+    PyColorObject* color = reinterpret_cast<PyColorObject*>(color_arg);
     self->canvas->setPixel(x, y, color->color.get());
     Py_RETURN_NONE;
 }
@@ -75,8 +80,8 @@ static PyObject* PyCanvas_addShape(PyCanvasObject* self, PyObject* args, PyObjec
     static const char *kwlist[] = {"shape", "fill_color", "border_color", NULL};
 
     PyObject* shape_obj;
-    PyObject* border_obj;
     PyObject* fill_obj;
+    PyObject* border_obj;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs, "OOO", const_cast<char **>(kwlist), &shape_obj, &fill_obj, &border_obj)) {
         return nullptr;
@@ -87,16 +92,25 @@ static PyObject* PyCanvas_addShape(PyCanvasObject* self, PyObject* args, PyObjec
         return nullptr;
     }
 
-    if (!PyColor_Check(border_obj) || !PyColor_Check(fill_obj)) {
-        PyErr_SetString(PyExc_TypeError, "border and fill must be Color objects");
+    bool bothColorScheme = PyColorScheme_Check(border_obj) && PyColorScheme_Check(fill_obj);
+    bool bothColor = PyColor_Check(border_obj) && PyColor_Check(fill_obj);
+
+    if (!bothColorScheme && !bothColor) {
+        PyErr_SetString(PyExc_TypeError, "border and fill must both be Color or both be ColorScheme objects");
         return nullptr;
     }
 
     PyShapeObject* pyShape = reinterpret_cast<PyShapeObject*>(shape_obj);
-    PyColorObject* border = reinterpret_cast<PyColorObject*>(border_obj);
-    PyColorObject* fill   = reinterpret_cast<PyColorObject*>(fill_obj);
 
-    self->canvas->addShape(*pyShape->shape, fill->color.get(), border->color.get());
+    if (bothColor) {
+        PyColorObject* border = reinterpret_cast<PyColorObject*>(border_obj);
+        PyColorObject* fill   = reinterpret_cast<PyColorObject*>(fill_obj);
+        self->canvas->addShape(*pyShape->shape, fill->color.get(), border->color.get());
+    } else {
+        PyColorSchemeObject* border = reinterpret_cast<PyColorSchemeObject*>(border_obj);
+        PyColorSchemeObject* fill   = reinterpret_cast<PyColorSchemeObject*>(fill_obj);
+        self->canvas->addShape(*pyShape->shape, fill->scheme.get(), border->scheme.get());
+    }
 
     Py_RETURN_NONE;
 }

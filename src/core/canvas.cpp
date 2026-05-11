@@ -41,11 +41,42 @@ void Canvas::setPixel(int x, int y, const RgbColor* color) {
     redAspect[index] = color->red;
 }
 
+void Canvas::setPixel(int x, int y, const ColorScheme* color) {
+    if (x < 0 || x >= width || y < 0 || y >= height) {
+        throw std::out_of_range("Pixel coordinates out of bounds");
+    }
+    int index = y * width + x;
+    RgbColor fixedColor = color->getColorForPixel(x, y);
+    blueAspect[index] = fixedColor.blue;
+    greenAspect[index] = fixedColor.green;
+    redAspect[index] = fixedColor.red;
+}
+
 bool Canvas::contains(int x, int y) const {
     return (x >= 0 && x < width && y >= 0 && y < height);
 }
 
 void Canvas::addShape(const Shape& shape, const RgbColor* fillColor, const RgbColor* borderColor) {
+    const set<pair<int, int>> pixels = shape.getContainedPixels();
+    for (const auto& pixel : pixels) {
+        // Allow shapes to fall partially outside of the canvas
+        if (!this->contains(pixel.first, pixel.second)){
+            continue;
+        }
+        setPixel(pixel.first, pixel.second, fillColor);
+    }
+    if (borderColor != nullptr) {
+        const set<pair<int, int>> borderPixels = shape.getBorderPixels();
+        for (const auto& pixel : borderPixels) {
+            if (!this->contains(pixel.first, pixel.second)){
+                continue;
+            }
+            setPixel(pixel.first, pixel.second, borderColor);
+        }
+    }
+}
+
+void Canvas::addShape(const Shape& shape, const ColorScheme* fillColor, const ColorScheme* borderColor) {
     const set<pair<int, int>> pixels = shape.getContainedPixels();
     for (const auto& pixel : pixels) {
         // Allow shapes to fall partially outside of the canvas

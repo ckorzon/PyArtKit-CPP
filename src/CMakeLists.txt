@@ -18,9 +18,25 @@ message(STATUS "Python DLL:             ${Python3_RUNTIME_LIBRARY_DIRS}")
 message(STATUS "Python include dir: ${Python3_INCLUDE_DIRS}")
 message(STATUS "Python library: ${Python3_LIBRARIES}")
 
-# Create a Python extension module from the C++ code
-add_library(pyartkitcpp MODULE python/pycanvas.cpp python/pycolor.cpp python/pyartkit.cpp python/pyshapes.cpp)
 
+add_library(pyartkit_bindings OBJECT
+    python/pycanvas.cpp
+    python/pycolor.cpp
+    python/pycolorscheme.cpp
+    python/pyshapes.cpp
+)
+
+target_link_libraries(pyartkit_bindings
+    PRIVATE
+        artkit_core
+        PNG::PNG
+        Python3::Python
+)
+
+target_include_directories(pyartkit_bindings PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/python)
+
+# Create a Python extension module from the C++ code
+add_library(pyartkitcpp MODULE $<TARGET_OBJECTS:pyartkit_bindings> python/pyartkit.cpp)
 
 target_link_libraries(pyartkitcpp
     PRIVATE

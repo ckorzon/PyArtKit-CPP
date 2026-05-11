@@ -2,7 +2,7 @@
 #ifndef PYSHAPES_H
 #define PYSHAPES_H
 
-#include "pycolor.h"
+#include "pycolorscheme.h"
 #include "geometry.h"
 
 #ifdef __cplusplus
@@ -52,6 +52,9 @@ extern PyTypeObject PyEllipseType;
 extern void init_PyEllipseType();
 #define PyEllipse_Check(op) PyObject_TypeCheck(op, &PyEllipseType)
 
+
+// MODULE INITIALIZATION
+void initShapes(PyObject* pymod);
 
 #ifdef __cplusplus
 }

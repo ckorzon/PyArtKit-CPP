@@ -30,7 +30,7 @@ class HorizontalGradientColorScheme : public ColorScheme {
         int leftBound;
         int rightBound;
     public:
-        HorizontalGradientColorScheme(int leftBound, int rightBound,const RgbColor& leftColor, const RgbColor& rightColor) 
+        HorizontalGradientColorScheme(int leftBound, int rightBound, const RgbColor& leftColor, const RgbColor& rightColor) 
             : leftColor(leftColor), rightColor(rightColor), leftBound(leftBound), rightBound(rightBound) {}
         
         RgbColor getColorForPixel(int x, int y) const override;

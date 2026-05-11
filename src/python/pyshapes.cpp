@@ -1,5 +1,6 @@
 
 #include "pyshapes.h"
+#include <stdexcept>
 
 // * ---------- SHAPE ---------- * //
 
@@ -12,6 +13,11 @@ PyTypeObject PyShapeType = {
     PyVarObject_HEAD_INIT(nullptr, 0)
 };
 
+static void PyShape_dealloc(PyShapeObject* self) {
+    self->shape.reset();
+    Py_TYPE(self)->tp_free((PyObject*)self);
+}
+
 void init_PyShapeType() {
     PyShapeType.tp_name = "pyartkitcpp.Shape";
     PyShapeType.tp_basicsize = sizeof(PyShapeObject);
@@ -20,6 +26,7 @@ void init_PyShapeType() {
     PyShapeType.tp_doc = "Abstract Shape class";
     PyShapeType.tp_init = (initproc)PyShape_init;
     PyShapeType.tp_new = PyType_GenericNew;
+    PyShapeType.tp_dealloc = (destructor)PyShape_dealloc;
 }
 
 // * ---------- CIRCLE ---------- * //
@@ -265,4 +272,38 @@ void init_PyEllipseType() {
     PyEllipseType.tp_new = PyType_GenericNew;
     PyEllipseType.tp_getset = PyEllipse_getset;
     PyEllipseType.tp_methods = PyEllipse_methods;
+}
+
+void initShapes(PyObject* pymod) {
+    init_PyShapeType();
+    init_PyCircleType();
+    init_PyPolygonType();
+    init_PyEllipseType();
+
+    PyCircleType.tp_base = &PyShapeType;
+    PyPolygonType.tp_base = &PyShapeType;
+    PyEllipseType.tp_base = &PyShapeType;
+
+    if (PyType_Ready(&PyShapeType) < 0) {
+        throw std::runtime_error("Failed to initialize Shape type");
+    }
+    if (PyType_Ready(&PyCircleType) < 0) {
+        throw std::runtime_error("Failed to initialize Circle type");
+    }
+    if (PyType_Ready(&PyPolygonType) < 0) {
+        throw std::runtime_error("Failed to initialize Polygon type");
+    }
+    if (PyType_Ready(&PyEllipseType) < 0) {
+        throw std::runtime_error("Failed to initialize Ellipse type");
+    }
+
+    Py_INCREF(&PyShapeType);
+    Py_INCREF(&PyCircleType);
+    Py_INCREF(&PyPolygonType);
+    Py_INCREF(&PyEllipseType);
+
+    PyModule_AddObject(pymod, "Shape", (PyObject*)&PyShapeType);
+    PyModule_AddObject(pymod, "Circle", (PyObject*)&PyCircleType);
+    PyModule_AddObject(pymod, "Polygon", (PyObject*)&PyPolygonType);
+    PyModule_AddObject(pymod, "Ellipse", (PyObject*)&PyEllipseType);
 }

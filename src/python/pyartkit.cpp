@@ -1,14 +1,5 @@
 
-#include "pycanvas.h"
-
-
-static struct PyModuleDef pyartkitcpp_module = {
-    PyModuleDef_HEAD_INIT,
-    "pyartkitcpp",
-    "Python bindings for ArtKit C++ library",
-    -1,
-    NULL
-};
+#include "pyartkitcpp.h"
 
 PyMODINIT_FUNC PyInit_pyartkitcpp(void) {
     PyObject* m = PyModule_Create(&pyartkitcpp_module);
@@ -24,30 +15,26 @@ PyMODINIT_FUNC PyInit_pyartkitcpp(void) {
     PyModule_AddObject(m, "Color", (PyObject*)&PyColorType);
 
     // Initialize Shape and children types
+    try {
+        initShapes(m);
+    } catch (const std::exception& e) {
+        PyErr_SetString(PyExc_RuntimeError, e.what());
+        return NULL;
+    } catch (...) {
+        PyErr_SetString(PyExc_RuntimeError, "An unknown error occurred while initializing shape types");
+        return NULL;
+    }
 
-    init_PyShapeType();
-    init_PyCircleType();
-    init_PyPolygonType();
-    init_PyEllipseType();
-
-    PyCircleType.tp_base = &PyShapeType;
-    PyPolygonType.tp_base = &PyShapeType;
-    PyEllipseType.tp_base = &PyShapeType;
-
-    if (PyType_Ready(&PyShapeType) < 0) return nullptr;
-    if (PyType_Ready(&PyCircleType) < 0) return nullptr;
-    if (PyType_Ready(&PyPolygonType) < 0) return nullptr;
-    if (PyType_Ready(&PyEllipseType) < 0) return nullptr;
-
-    Py_INCREF(&PyShapeType);
-    Py_INCREF(&PyCircleType);
-    Py_INCREF(&PyPolygonType);
-    Py_INCREF(&PyEllipseType);
-
-    PyModule_AddObject(m, "Shape", (PyObject*)&PyShapeType);
-    PyModule_AddObject(m, "Circle", (PyObject*)&PyCircleType);
-    PyModule_AddObject(m, "Polygon", (PyObject*)&PyPolygonType);
-    PyModule_AddObject(m, "Ellipse", (PyObject*)&PyEllipseType);
+    // Initialize ColorScheme and children types
+    try {
+        initColorSchemes(m);
+    } catch (const std::exception& e) {
+        PyErr_SetString(PyExc_RuntimeError, e.what());
+        return NULL;
+    } catch (...) {
+        PyErr_SetString(PyExc_RuntimeError, "An unknown error occurred while initializing color scheme types");
+        return NULL;
+    }
 
     // Initialize Canvas
     init_PyCanvasType();
