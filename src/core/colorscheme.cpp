@@ -7,6 +7,11 @@ RgbColor StaticColorScheme::getColorForPixel(int x, int y) const {
 
 RgbColor HorizontalGradientColorScheme::getColorForPixel(int x, int y) const {
     // Simple linear interpolation based on x position
+    if (x < leftBound) {
+        return leftColor;
+    } else if (x > rightBound) {
+        return rightColor;
+    }
     float ratio = static_cast<float>(x - leftBound) / (rightBound - leftBound);
     uint8_t red = static_cast<uint8_t>(leftColor.red * (1 - ratio) + rightColor.red * ratio);
     uint8_t green = static_cast<uint8_t>(leftColor.green * (1 - ratio) + rightColor.green * ratio);
@@ -16,6 +21,12 @@ RgbColor HorizontalGradientColorScheme::getColorForPixel(int x, int y) const {
 
 RgbColor VerticalGradientColorScheme::getColorForPixel(int x, int y) const {
     // Simple linear interpolation based on y position
+    // * Note: Top of canvas is y=0; We expect topBound < bottomBound, so ratio will be 0 at topBound and 1 at bottomBound
+    if (y < topBound) {
+        return topColor;
+    } else if (y > bottomBound) {
+        return bottomColor;
+    }
     float ratio = static_cast<float>(y - topBound) / (bottomBound - topBound);
     uint8_t red = static_cast<uint8_t>(topColor.red * (1 - ratio) + bottomColor.red * ratio);
     uint8_t green = static_cast<uint8_t>(topColor.green * (1 - ratio) + bottomColor.green * ratio);

@@ -14,21 +14,27 @@ TEST_CASE("StaticColorScheme returns the correct color") {
 TEST_CASE("HorizontalGradientColorScheme returns correct colors") {
     RgbColor leftColor(255, 0, 0);
     RgbColor rightColor(0, 0, 255);
-    HorizontalGradientColorScheme scheme(0, 10, leftColor, rightColor);
+    HorizontalGradientColorScheme scheme(20, 30, leftColor, rightColor);
 
-    REQUIRE(scheme.getColorForPixel(0, 0) == leftColor);
-    REQUIRE(scheme.getColorForPixel(10, 0) == rightColor);
-    REQUIRE(scheme.getColorForPixel(5, 0) == RgbColor(127, 0, 127)); // Midpoint
+    REQUIRE(scheme.getColorForPixel(10, 0) == leftColor);
+    REQUIRE(scheme.getColorForPixel(20, 0) == leftColor);
+    REQUIRE(scheme.getColorForPixel(20, 15) == leftColor);
+    REQUIRE(scheme.getColorForPixel(30, 0) == rightColor);
+    REQUIRE(scheme.getColorForPixel(34, 0) == rightColor);
+    REQUIRE(scheme.getColorForPixel(30, 90) == rightColor);
+    REQUIRE(scheme.getColorForPixel(25, 0) == RgbColor(127, 0, 127)); // Midpoint
 }
 
 TEST_CASE("VerticalGradientColorScheme returns correct colors") {
     RgbColor topColor(0, 255, 0);
     RgbColor bottomColor(0, 0, 255);
-    VerticalGradientColorScheme scheme(0, 10, topColor, bottomColor);
-
-    REQUIRE(scheme.getColorForPixel(0, 0) == topColor);
-    REQUIRE(scheme.getColorForPixel(0, 10) == bottomColor);
-    REQUIRE(scheme.getColorForPixel(0, 5) == RgbColor(0, 127, 127)); // Midpoint
+    VerticalGradientColorScheme scheme(10, 20, topColor, bottomColor);
+    REQUIRE(scheme.getColorForPixel(0, 5) == topColor);
+    REQUIRE(scheme.getColorForPixel(0, 10) == topColor);
+    REQUIRE(scheme.getColorForPixel(100, 10) == topColor);
+    REQUIRE(scheme.getColorForPixel(0, 20) == bottomColor);
+    REQUIRE(scheme.getColorForPixel(50, 20) == bottomColor);
+    REQUIRE(scheme.getColorForPixel(0, 15) == RgbColor(0, 127, 127)); // Midpoint
 }
 
 TEST_CASE("RadialGradientColorScheme returns correct colors") {
