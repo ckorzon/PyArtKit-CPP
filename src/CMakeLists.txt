@@ -38,6 +38,12 @@ target_include_directories(pyartkit_bindings PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/
 # Create a Python extension module from the C++ code
 add_library(pyartkitcpp MODULE $<TARGET_OBJECTS:pyartkit_bindings> python/pyartkit.cpp)
 
+configure_file(
+    "${CMAKE_SOURCE_DIR}/src/python/pyartkitcpp.pyi"
+    "${CMAKE_CURRENT_BINARY_DIR}/Release/pyartkitcpp.pyi"
+    COPYONLY
+)
+
 target_link_libraries(pyartkitcpp
     PRIVATE
         artkit_core

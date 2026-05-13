@@ -137,9 +137,9 @@ static PyGetSetDef PyCanvas_getseters[] = {
 
 static PyMethodDef PyCanvas_methods[] = {
     {"resize", (PyCFunction)PyCanvas_resize, METH_VARARGS | METH_KEYWORDS, "Resize the canvas"},
-    {"setPixel", (PyCFunction)PyCanvas_setPixel, METH_VARARGS | METH_KEYWORDS, "Set a pixel on the canvas"},
-    {"toPng", (PyCFunction)PyCanvas_toPng, METH_VARARGS | METH_KEYWORDS, "Save the canvas as a PNG file"},
-    {"addShape", (PyCFunction)PyCanvas_addShape, METH_VARARGS | METH_KEYWORDS, "Draw a Shape on the canvas"},
+    {"set_pixel", (PyCFunction)PyCanvas_setPixel, METH_VARARGS | METH_KEYWORDS, "Set a pixel on the canvas"},
+    {"to_png", (PyCFunction)PyCanvas_toPng, METH_VARARGS | METH_KEYWORDS, "Save the canvas as a PNG file"},
+    {"add_shape", (PyCFunction)PyCanvas_addShape, METH_VARARGS | METH_KEYWORDS, "Draw a Shape on the canvas"},
     {NULL}
 };
 
@@ -149,7 +149,6 @@ PyTypeObject PyCanvasType = {
 
 void init_PyCanvasType() {
     PyCanvasType.tp_name = "canvas.Canvas";
-    PyCanvasType.tp_doc = "Canvas class for drawing";
     PyCanvasType.tp_basicsize = sizeof(PyCanvasObject);
     PyCanvasType.tp_itemsize = 0;
     PyCanvasType.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
@@ -157,4 +156,8 @@ void init_PyCanvasType() {
     PyCanvasType.tp_init = (initproc)PyCanvas_init;
     PyCanvasType.tp_methods = PyCanvas_methods;
     PyCanvasType.tp_getset = PyCanvas_getseters;
+    PyCanvasType.tp_doc = 
+        "Canvas(width: int, height: int, background_color=None)\n"
+        "--\n\n"
+        "Canvas class for drawing pixel art with support for directly setting pixels or adding shapes with specified fill and border colors or color schemes.";
 }

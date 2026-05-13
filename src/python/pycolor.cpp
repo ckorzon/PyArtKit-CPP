@@ -137,8 +137,11 @@ void init_PyColorType() {
     PyColorType.tp_itemsize = 0;
     PyColorType.tp_dealloc = (destructor)PyColor_dealloc;
     PyColorType.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
-    PyColorType.tp_doc = "RGB Color object";
     PyColorType.tp_init = (initproc)PyColor_init;
     PyColorType.tp_new = PyType_GenericNew;
     PyColorType.tp_getset = PyColor_getset;
+    PyColorType.tp_doc = 
+        "Color(red: int, green: int, blue: int)\n"
+        "--\n\n"
+        "RGB Color object";
 }
