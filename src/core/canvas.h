@@ -3,17 +3,9 @@
 
 #include <cstdint>
 #include <vector>
-
-class RgbColor {
-public:
-    RgbColor() : red(0), green(0), blue(0) {};
-    RgbColor(uint8_t red, uint8_t green, uint8_t blue) : red(red), green(green), blue(blue) {};
-    uint8_t red; // Red component
-    uint8_t green; // Green component
-    uint8_t blue; // Blue component
-    bool operator==(const RgbColor& other) const;
-};
-
+#include <memory>
+#include "shapes.h"
+#include "colorscheme.h"
 
 class Canvas {
 private:
@@ -30,11 +22,17 @@ public:
     int getWidth() const;
     int getHeight() const;
     void resize(int newWidth, int newHeight);
-    void setPixel(int x, int y, const RgbColor& color);
+    void setPixel(int x, int y, const RgbColor* color);
+    void setPixel(int x, int y, const ColorScheme* color);
+    void addShape(const Shape& shape, const RgbColor* fillColor, const RgbColor* borderColor = nullptr);
+    void addShape(const Shape& shape, const ColorScheme* fillColor, const ColorScheme* borderColor = nullptr);
     RgbColor getPixel(int x, int y) const;
+    uint8_t getPixelRed(int x, int y) const;
+    uint8_t getPixelGreen(int x, int y) const;
+    uint8_t getPixelBlue(int x, int y) const;
     void toPNG(const char* filename) const;
+    bool contains(int x, int y) const;
 };
-
 
 
 #endif // CANVAS_H
