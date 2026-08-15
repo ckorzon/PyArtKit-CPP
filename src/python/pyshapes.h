@@ -53,6 +53,16 @@ extern void init_PyEllipseType();
 #define PyEllipse_Check(op) PyObject_TypeCheck(op, &PyEllipseType)
 
 
+// HALF CIRCLE
+
+typedef struct {
+    PyShapeObject base;
+} PyHalfCircleObject;
+
+extern PyTypeObject PyHalfCircleType;
+extern void init_PyHalfCircleType();
+#define PyHalfCircle_Check(op) PyObject_TypeCheck(op, &PyHalfCircleType)
+
 // MODULE INITIALIZATION
 void initShapes(PyObject* pymod);
 

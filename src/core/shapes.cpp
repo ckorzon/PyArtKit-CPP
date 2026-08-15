@@ -99,6 +99,58 @@ void Ellipse::translate(int dx, int dy) {
     centerY += dy;
 }
 
+HalfCircle::HalfCircle(int centerX, int centerY, int radius, pair<int, int> normalVector)
+    : centerX(centerX), centerY(centerY), radius(radius), normalVector(normalVector) {}
+
+set<pair<int, int>> HalfCircle::getContainedPixels() const {
+    set<pair<int, int>> pixels;
+    int rSquared = radius * radius;
+    for (int x = centerX - radius; x <= centerX + radius; ++x) {
+        for (int y = centerY - radius; y <= centerY + radius; ++y) {
+            int dx = x - centerX;
+            int dy = y - centerY;
+            if (dx * dx + dy * dy <= rSquared) {
+                if ((normalVector.first * dx + normalVector.second * dy) >= 0) {
+                    pixels.insert({x, y});
+                }
+            }
+        }
+    }
+    return pixels;
+}
+
+set<pair<int, int>> HalfCircle::getBorderPixels() const {
+    set<pair<int, int>> pixels;
+    int rSquared = radius * radius;
+    for (int x = centerX - radius; x <= centerX + radius; ++x) {
+        for (int y = centerY - radius; y <= centerY + radius; ++y) {
+            int dx = x - centerX;
+            int dy = y - centerY;
+            if (dx * dx + dy * dy == rSquared) {
+                if ((normalVector.first * dx + normalVector.second * dy) >= 0) {
+                    pixels.insert({x, y});
+                }
+            }
+        }
+    }
+    return pixels;
+}
+
+bool HalfCircle::containsPoint(int x, int y) const {
+    int dx = x - centerX;
+    int dy = y - centerY;
+    if (dx * dx + dy * dy <= radius * radius) {
+        // Check if the point is on the correct side of the normal vector
+        return (normalVector.first * dx + normalVector.second * dy) >= 0;
+    }
+    return false;
+}
+
+void HalfCircle::translate(int dx, int dy) {
+    centerX += dx;
+    centerY += dy;
+}
+
 double degreesToRadians(double degrees) {
     return degrees * PI / 180.0;
 }

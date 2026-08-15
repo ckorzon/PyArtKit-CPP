@@ -51,6 +51,21 @@ class Ellipse : public Shape {
         int getRadiusY() const { return radiusY; }
 };
 
+class HalfCircle : public Shape {
+    private:
+        int centerX;
+        int centerY;
+        int radius;
+        pair<int, int> normalVector; // Directional normal vector for the half-circle
+
+    public:
+        HalfCircle(int centerX, int centerY, int radius, pair<int, int> normalVector);
+        set<pair<int, int>> getContainedPixels() const override;
+        set<pair<int, int>> getBorderPixels() const override;
+        bool containsPoint(int x, int y) const override;
+        void translate(int dx, int dy) override;
+};
+
 
 double degreesToRadians(double degrees);
 

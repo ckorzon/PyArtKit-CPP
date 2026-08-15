@@ -118,6 +118,17 @@ class Ellipse(Shape):
     def translate(self, dx: int, dy: int): ...
 
 
+class HalfCircle(Shape):
+
+    # x: int
+    # y: int
+    # radius: int
+    # normalVector: tuple[int, int]
+
+    def __init__(self, x: int, y: int, radius: int, normalVector: tuple[int, int]): ...
+
+    def translate(self, dx: int, dy: int): ...
+
 #*##################################################
 #*################# Canvas #########################
 #*##################################################

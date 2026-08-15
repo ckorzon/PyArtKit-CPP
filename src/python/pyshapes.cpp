@@ -274,15 +274,99 @@ void init_PyEllipseType() {
     PyEllipseType.tp_methods = PyEllipse_methods;
 }
 
+// * ---------- HALF CIRCLE ---------- * //
+
+static int PyHalfCircle_init(PyHalfCircleObject *self, PyObject *args, PyObject *kwargs) {
+    static const char *kwlist[] = {"x", "y", "radius", "normal_vector", NULL};
+    int centerX, centerY, radius;
+    PyObject* normalVectorObj = nullptr;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "iiiO", const_cast<char **>(kwlist),
+                                     &centerX, &centerY, &radius, &normalVectorObj)) {
+        return -1;
+    }
+
+    // Validate normal_vector is a tuple of two integers
+    if (!PyTuple_Check(normalVectorObj) || PyTuple_Size(normalVectorObj) != 2) {
+        PyErr_SetString(PyExc_TypeError, "normal_vector must be a tuple of two integers");
+        return -1;
+    }
+
+    int normalX = (int) PyLong_AsLong(PyTuple_GetItem(normalVectorObj, 0));
+    int normalY = (int) PyLong_AsLong(PyTuple_GetItem(normalVectorObj, 1));
+
+    if (PyErr_Occurred()) {
+        PyErr_SetString(PyExc_TypeError, "normal_vector must contain only integers");
+        return -1;
+    }
+
+    try {
+        self->base.shape = std::make_shared<HalfCircle>(centerX, centerY, radius, std::make_pair(normalX, normalY));
+    } catch (...) {
+        PyErr_SetString(PyExc_RuntimeError, "Failed to create HalfCircle object");
+        return -1;
+    }
+
+    return 0;
+}
+
+// ToDo: Add HalfCircle getters and setters
+
+static PyGetSetDef PyHalfCircle_getset[] = {
+    {nullptr}
+};
+
+static PyObject* PyHalfCircle_translate(PyHalfCircleObject* self, PyObject* args, PyObject* kwargs) {
+    static const char* kwlist[] = {"dx", "dy", nullptr};
+
+    int dx, dy;
+
+    if (!PyArg_ParseTupleAndKeywords(
+            args,
+            kwargs,
+            "ii",
+            const_cast<char**>(kwlist),
+            &dx, &dy))
+    {
+        return nullptr;
+    }
+
+    self->base.shape->translate(dx, dy);
+    Py_RETURN_NONE;
+};
+
+static PyMethodDef PyHalfCircle_methods[] = {
+    {"translate", (PyCFunction)PyHalfCircle_translate, METH_VARARGS | METH_KEYWORDS, "Translate the half-circle using dx and dy"},
+    {NULL}
+};
+
+PyTypeObject PyHalfCircleType = {
+    PyVarObject_HEAD_INIT(nullptr, 0)
+};
+
+void init_PyHalfCircleType() {
+    PyHalfCircleType.tp_name = "pyartkitcpp.HalfCircle";
+    PyHalfCircleType.tp_basicsize = sizeof(PyHalfCircleObject);
+    PyHalfCircleType.tp_flags = Py_TPFLAGS_DEFAULT;
+    PyHalfCircleType.tp_init = (initproc)PyHalfCircle_init;
+    PyHalfCircleType.tp_new = PyType_GenericNew;
+    PyHalfCircleType.tp_getset = PyHalfCircle_getset;
+    PyHalfCircleType.tp_methods = PyHalfCircle_methods;
+}
+
+
+// * ---------- MODULE INITIALIZATION ---------- * //
+
 void initShapes(PyObject* pymod) {
     init_PyShapeType();
     init_PyCircleType();
     init_PyPolygonType();
     init_PyEllipseType();
-
+    init_PyHalfCircleType();
     PyCircleType.tp_base = &PyShapeType;
     PyPolygonType.tp_base = &PyShapeType;
     PyEllipseType.tp_base = &PyShapeType;
+    PyHalfCircleType.tp_base = &PyShapeType;
 
     if (PyType_Ready(&PyShapeType) < 0) {
         throw std::runtime_error("Failed to initialize Shape type");
@@ -296,14 +380,19 @@ void initShapes(PyObject* pymod) {
     if (PyType_Ready(&PyEllipseType) < 0) {
         throw std::runtime_error("Failed to initialize Ellipse type");
     }
+    if (PyType_Ready(&PyHalfCircleType) < 0) {
+        throw std::runtime_error("Failed to initialize HalfCircle type");
+    }
 
     Py_INCREF(&PyShapeType);
     Py_INCREF(&PyCircleType);
     Py_INCREF(&PyPolygonType);
     Py_INCREF(&PyEllipseType);
+    Py_INCREF(&PyHalfCircleType);
 
     PyModule_AddObject(pymod, "Shape", (PyObject*)&PyShapeType);
     PyModule_AddObject(pymod, "Circle", (PyObject*)&PyCircleType);
     PyModule_AddObject(pymod, "Polygon", (PyObject*)&PyPolygonType);
     PyModule_AddObject(pymod, "Ellipse", (PyObject*)&PyEllipseType);
+    PyModule_AddObject(pymod, "HalfCircle", (PyObject*)&PyHalfCircleType);
 }
